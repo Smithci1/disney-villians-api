@@ -1,0 +1,29 @@
+{
+  "name": "disney-villains-api",
+  "version": "1.0.0",
+  "description": "In this two part exercise you are tasked with create a REST API for accessing Disney Villain data, complete with test suite.",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npm run lint:pug && npm run lint:eslint",
+    "lint:eslint": "eslint --format codeframe ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smithci1/disney-villains-api.git"
+  },
+  "author": "Chadwick Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smithci1/disney-villains-api/issues"
+  },
+  "homepage": "https://github.com/Smithci1/disney-villains-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.26.0",
+    "nodemon": "^2.0.7"
+  }
+}
