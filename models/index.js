@@ -1,9 +1,9 @@
-const { SequelizeScopeError } = require('sequelize');
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 const villainsModel = require('./villains')
 
-const connection = new Sequelize(, 
-    {host:'localhost', dialect: 'mysql'})
+const connection = new Sequelize('villainDatabase', 'villainUSER', 'villery1',
+  { host: 'localhost', dialect: 'mysql' })
 
-    const villains = villainsModel( connection, Sequelize)
-    module.exports = { villains }
+const villains = villainsModel(connection, Sequelize)
+
+module.exports = { villains }
