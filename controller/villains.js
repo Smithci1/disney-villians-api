@@ -1,14 +1,16 @@
 const villains = require('../villains')
-const getVillains = async(req,res) => {
-    return res.send(villains)
-}
-const noEnter = (req,res) => {
-    return res.Status(404)
-}
-const slugger = (req,res) =>{
-    const { slug } = req.params
-    const villainMatch = await mo
-    
+const models = require('../models')
+const getVillains = async (req, res) => {
+  const villains = await models.villains.findAll({ props: ['name', 'movie', 'slug'] })
+
+  return res.send(villains)
 }
 
-module.exports = { getVillains }
+const slugger = async (req, res) => {
+  const { slug } = req.params
+  const villainMatch = await models.villains.findOne({ where: { slug } })
+
+  return res.send(villainMatch)
+}
+
+module.exports = { getVillains, slugger }
