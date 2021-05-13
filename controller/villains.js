@@ -6,7 +6,7 @@ const getVillains = async (request, response) => {
 }
 const slugger = async (req, res) => {
   const { slug } = req.params
-  const villainMatch = await models.villains.findOne({ where: { slug } })
+  const villainMatch = await models.villains.findOne({ where: { slug }, attributes: ['name', 'movie', 'slug'] })
 
   return res.send(villainMatch)
 }
