@@ -8,8 +8,7 @@ const slugger = async (req, res) => {
   const { slug } = req.params
   const villainMatch = await models.villains.findOne({ where: { slug }, attributes: ['name', 'movie', 'slug'] })
 
-  if (villainMatch === true) return res.send(villainMatch)
-  else res.sendStatus(404)
+  return villainMatch ? res.send(villainMatch) : res.sendStatus(404)
 }
 
 
