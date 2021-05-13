@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/Smithci1/disney-villains-api#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "eslint": "^7.26.0",
