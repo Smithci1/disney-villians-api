@@ -1,4 +1,4 @@
-DROP DATABASE IF exists villaindata;
+DROP DATABASE IF exists villaindatabases;
 CREATE DATABASE villaindatabases;
 USE villaindatabases;
 CREATE TABLE villaintables (
@@ -6,6 +6,9 @@ id INT AUTO_INCREMENT,
 name VARCHAR(255),
 movie VARCHAR(255),
 slug VARCHAR(255),
+createdAt DATETIME DEFAULT NOW(),
+updatedAt DATETIME DEFAULT NOW() ON UPDATE NOW(),
+deletedAt DATETIME,
 primary key(id)
 );
 SHOW TABLES;

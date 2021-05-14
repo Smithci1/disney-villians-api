@@ -6,11 +6,14 @@ const getVillains = async (req, res) => {
 }
 const slugger = async (req, res) => {
   const { slug } = req.params
-  const villainMatch = await models.villains.findOne({ where: { slug }, attributes: ['name', 'movie', 'slug'] })
+  const villainMatch = await models.villains.findOne({
+    where: { slug },
+    attributes: ['name', 'movie', 'slug']
+  })
 
   return villainMatch ? res.send(villainMatch) : res.sendStatus(404)
 }
-const addNewTeam = async (req, res) => {
+const addNewVillain = async (req, res) => {
   const { name, movie, slug } = req.body
 
   if (!name || !movie || !slug) {
@@ -24,4 +27,4 @@ const addNewTeam = async (req, res) => {
 
 
 
-module.exports = { getVillains, slugger, addNewTeam }
+module.exports = { getVillains, slugger, addNewVillain }
