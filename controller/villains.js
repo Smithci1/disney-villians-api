@@ -1,6 +1,7 @@
 const models = require('../models')
 const getVillains = async (req, res) => {
-  const villains = await models.villains.findAll({ attributes: ['name', 'movie', 'slug'] })
+  const villains = await models.villains.findAll({ 
+    attributes: ['name', 'movie', 'slug'] })
 
   return res.send(villains)
 }
