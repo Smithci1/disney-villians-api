@@ -16,6 +16,9 @@ describe('Controllers - villains', () => {
       const res = { send: stubbedSend }
 
       await getVillains({}, res)
+
+      expect(stubbedFindAll).to.have.callCount(1)
+      expect(stubbedSend).to.have.been.calledWith(mockVillains)
     })
   })
 
