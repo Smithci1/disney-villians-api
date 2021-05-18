@@ -9,6 +9,10 @@ chai.use(sinonChai)
 const { expect } = chai
 
 describe('Controllers - villains', () => {
+  let stubbedFindOne
+
+
+
   describe('getVillains', () => {
     it('retrieves a list of villains from the database and calls res.send() with the list', async () => {
       const stubbedFindAll = sinon.stub(models.villains, 'findAll').returns(mockVillains)
@@ -22,7 +26,19 @@ describe('Controllers - villains', () => {
     })
   })
 
-  describe('slugger', () => {})
+  describe('slugger', () => {
+    it('retrieves the villain associated with the provided slug from the database and calls res.send with it', async () => {
+      stubbedFindOne.returns(sMockVillain)
+      const req = { params: { slug: 'Shere Khan' } }
+      const stubbedSend = sinon.stub()
+      const res = { send: stubbedSend }
+
+      await slugger(req, res)
+
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'Shere Khan' }, attributes: ['name', 'movie', 'slug'] })
+      expect(stubbedSend).to.have.been.calledWith(sMockVillain)
+    })
+  })
 
   describe('addNewVillain', () => {})
 })
