@@ -17,7 +17,7 @@ const slugger = async (req, res) => {
 const addNewVillain = async (req, res) => {
   const { name, movie, slug } = req.body
 
-  if (!name || !movie || !slugdd) {
+  if (!name || !movie || !slug) {
     return res.status(400).send('You have not presented the attributes required: name, movie, slug')
   }
 

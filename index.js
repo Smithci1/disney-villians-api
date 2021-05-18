@@ -7,7 +7,8 @@ app.get('/villains', getVillains)
 app.get('/villains/:slug', slugger)
 
 
-app.post('/villains', addNewVillain)
+app.post('/villains', bodyParser.json(), addNewVillain)
 
 app.listen(1337, () => {
+  return console.log('you are lisening to 1337')
 })
