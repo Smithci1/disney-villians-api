@@ -14,10 +14,10 @@ const mockVillains = [{
   'slug': 'red-skull'
 }]
 
-const singleMockVillain = [{
+const singleMockvillain = [{
   'name': 'Shere Khan',
   'movie': 'The Jungle Book',
   'slug': 'shere-khan'
 }]
 
-module.exports = { mockVillains, singleMockVillain }
+module.exports = { mockVillains, singleMockvillain }
