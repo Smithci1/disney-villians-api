@@ -1,15 +1,18 @@
 const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
-const { describe, it } = require('sinon-chai')
-const { getVillains, slugger, addNewVillain } = require('../../contollers/villains')
-const { mockVillains, sMockVillain } = require('../mocks/mockVillains')
+const { createSandbox } = require('sinon')
+const { describe, it } = require('mocha')
+const models = require('../../models')
+const { getVillains, slugger, addNewVillain } = require('../../controller/villains')
+const { mockVillains, singleMockVillain } = require('../mocks/mockVillains')
 
 chai.use(sinonChai)
 const { expect } = chai
 
 describe('Controllers - villains', () => {
-  let stubbedFindOne
+ let stubbedFindOne
+  let res
 
 
 
@@ -27,16 +30,18 @@ describe('Controllers - villains', () => {
   })
 
   describe('slugger', () => {
-    it('retrieves the villain associated with the provided slug from the database and calls res.send with it', async () => {
-      stubbedFindOne.returns(sMockVillain)
-      const req = { params: { slug: 'Shere Khan' } }
-      const stubbedSend = sinon.stub()
-      const res = { send: stubbedSend }
+    it('retrieves the villain associated with the provi ded slug from the database and calls res.send with it', async () => {
+     stubbedFindOne.returns(singleMockVillain)
 
+      const req = { params: { slug: 'Shere-Khan' } }
+
+      
+      
+      
       await slugger(req, res)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'Shere Khan' }, attributes: ['name', 'movie', 'slug'] })
-      expect(stubbedSend).to.have.been.calledWith(sMockVillain)
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'Shere-Khan' }, attributes: ['name', 'movie', 'slug'] })
+      expect(stubbedSend).to.have.been.calledWith(singleMockVillain)
     })
   })
 
