@@ -1,3 +1,8 @@
+const singleMockvillain = {
+  'name': 'Shere Khan',
+  'movie': 'The Jungle Book',
+  'slug': 'shere-khan',
+}
 const mockVillains = [{
   'name': 'Ursula',
   'movie': 'The Little Mermaid',
@@ -14,10 +19,5 @@ const mockVillains = [{
   'slug': 'red-skull'
 }]
 
-const singleMockvillain = [{
-  'name': 'Shere Khan',
-  'movie': 'The Jungle Book',
-  'slug': 'shere-khan'
-}]
 
 module.exports = { mockVillains, singleMockvillain }

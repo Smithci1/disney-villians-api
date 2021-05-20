@@ -21,6 +21,14 @@ describe('Controllers - villains', () => {
   let stubbedStatus
   let stubbedStatusDotSend
 
+  before(() => {
+    stubbedFindOne = sinon.stub(models.villains, 'findOne')
+    stubbedCreate = sinon.stub(models.villains, 'create')
+    stubbedSend = sinon.stub()
+    stubbedStatus = sinon.stub()
+    stubbedStatusDotSend = sinon.stub()
+  })
+
 
   describe('getVillains', () => {
     it('retrieves a list of villains from the database and calls res.send() with the list',
@@ -67,7 +75,11 @@ describe('Controllers - villains', () => {
           }
         }
 
+        stubbedStatus.returns({ send: stubbedSend })
+        const res = { status: stubbedStatus }
+
         await addNewVillain(req, res)
+
 
         expect(stubbedCreate).to.have.been.calledWith({
           name: 'Shere Khan',
@@ -75,7 +87,7 @@ describe('Controllers - villains', () => {
           slug: 'shere-khan',
         })
         expect(stubbedStatus).to.have.been.calledWith(201)
-        expect(stubbedStatusDotSend).to.have.been.calledWith(singleMockvillain)
+        expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
   })
 })
