@@ -2,7 +2,9 @@ const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
-const { describe, it } = require('mocha')
+const {
+  afterEach, before, beforeEach, describe, it
+} = require('mocha')
 const models = require('../../models')
 const { mockVillains, singleMockvillain } = require('../mocks/mockData')
 const { getVillains, slugger, addNewVillain } = require('../../controller/villains')
@@ -25,17 +27,19 @@ describe('Controllers - villains', () => {
   before(() => {
     sandbox = sinon.createSandbox()
 
+    stubbedFindAll = sinon.stub(models.villains, 'findAll')
     stubbedFindOne = sinon.stub(models.villains, 'findOne')
     stubbedCreate = sinon.stub(models.villains, 'create')
+
     stubbedSend = sinon.stub()
     stubbedStatus = sinon.stub()
     stubbedSendStatus = sinon.stub()
-    stubbedStatusSend = sandbox.stub()
+    stubbedStatusSend = sinon.stub()
 
     res = {
       send: stubbedSend,
       sendStatus: stubbedSendStatus,
-      status: stubbedStatus
+      status: stubbedStatus,
     }
   })
   beforeEach(() => {
@@ -47,9 +51,9 @@ describe('Controllers - villains', () => {
 
 
   describe('getVillains', () => {
-    it('retrieves a list of villains from the database and calls res.send() with the list',
+    it('retrieves a list of villains from the database and calls r with the list',
       async () => {
-        const stubbedFindAll = sinon.stub(models.villains, 'findAll').returns(mockVillains)
+        stubbedFindAll.returns(mockVillains)
         const stubbedSend = sinon.stub()
         const res = { send: stubbedSend }
 
@@ -63,7 +67,7 @@ describe('Controllers - villains', () => {
 
       await getVillains({}, res)
 
-      expect(stubbedFindAll).to.have.callCount(1)
+      expect(stubbedFindAll).to.have.calledWith({ attributes: ['name', 'movie', 'slug'] })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
     })
@@ -88,23 +92,24 @@ describe('Controllers - villains', () => {
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
 
-    it('returns a 404 when no hero is found', async () => {
+    it('returns a 404 when no villain is found', async () => {
       stubbedFindOne.returns(null)
       const req = { params: { slug: 'not-found' } }
-      const res = { send: stubbedSend }
+
 
       await slugger(req, res)
 
       expect(stubbedFindOne).to.have.been.calledWith({
-        where: { slug: 'not-found' }
+        where: { slug: 'not-found' },
+        attributes: ['name', 'movie', 'slug']
       })
       expect(stubbedSendStatus).to.have.been.calledWith(404)
     })
 
     it('returns a 500 with an error message when the database call throws an error', async () => {
-      stubbedFindOne.thwos('ERROR!')
-      const req = { params: { slug: 'throws-error' } }
-      const res = { send: stubbedSend }
+      stubbedFindOne.throws('ERROR!')
+      const req = { params: { slug: 'throw-error' } }
+
 
       await slugger(req, res)
 
@@ -139,5 +144,15 @@ describe('Controllers - villains', () => {
         expect(stubbedStatus).to.have.been.calledWith(201)
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
+    it('returns a 400 status when the required fiels arent given', async () => {
+      stubbedCreate.returns(null)
+      const req = { body: {} }
+
+      await addNewVillain(req, res)
+
+      expect(stubbedCreate).to.have.callCount(0)
+      expect(stubbedStatus).to.have.been.calledWith(400)
+      expect(stubbedStatusSend).to.have.been.calledWith(singleMockvillain)
+    })
   })
 })
