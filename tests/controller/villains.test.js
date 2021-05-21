@@ -68,7 +68,7 @@ describe('Controllers - villains', () => {
 
       expect(stubbedFindAll).to.have.calledWith({ attributes: ['name', 'movie', 'slug'] })
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
+      expect(stubbedStatusSend).to.have.been.calledWith('villains are unreachable, please try again')
     })
   })
 
@@ -77,15 +77,13 @@ describe('Controllers - villains', () => {
     it('retrieves the villain associated with the provided slug from the database and calls it with res.send() ',
       async () => {
         stubbedFindOne.returns(singleMockvillain)
-        const stubbedSend = sinon.stub()
-        const res = { send: stubbedSend }
 
-        const req = { params: { slug: 'shere-khan' }, attributes: ['name', 'movie', 'slug'] }
+        const req = { params: { slug: 'Shere Khan' } }
 
         await slugger(req, res)
 
         expect(stubbedFindOne).to.have.been.calledWith({
-          where: { slug: 'shere-Khan' },
+          where: { slug: 'Shere Khan' },
           attributes: ['name', 'movie', 'slug']
         })
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
@@ -147,7 +145,7 @@ describe('Controllers - villains', () => {
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
     it('returns a 400 status when the required fiels arent given', async () => {
-      const req = { body: { name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', } }
+      const req = { body: { name: 'Shere Khan', movie: 'The Jungle Book' } }
 
       await addNewVillain(req, res)
 
@@ -161,10 +159,9 @@ describe('Controllers - villains', () => {
 
       await addNewVillain(req, res)
 
-      expect(stubbedCreate).to.have.been.calledwith({ 
-        name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', })
+      expect(stubbedCreate).to.have.been.calledwith({ name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', })
       expect(stubbedStatus).to.have.been.calledWith(500)
-      expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
+      expect(stubbedStatusSend).to.have.been.calledWith('not able to create villain, please try again')
     })
   })
 })
