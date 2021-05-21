@@ -58,6 +58,15 @@ describe('Controllers - villains', () => {
         expect(stubbedFindAll).to.have.callCount(1)
         expect(stubbedSend).to.have.been.calledWith(mockVillains)
       })
+    it('returns a 500 status when an error occurs retrieving villains', async () => {
+      stubbedFindAll.throws('ERROR!')
+
+      await getVillains({}, res)
+
+      expect(stubbedFindAll).to.have.callCount(1)
+      expect(stubbedStatus).to.have.been.calledWith(500)
+      expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
+    })
   })
 
 
