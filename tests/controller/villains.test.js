@@ -82,6 +82,7 @@ describe('Controllers - villains', () => {
     it('returns a 404 when no hero is found', async () => {
       stubbedFindOne.returns(null)
       const req = { params: { slug: 'not-found' } }
+      const res = { send: stubbedSend }
 
       await slugger(req, res)
 
@@ -89,6 +90,18 @@ describe('Controllers - villains', () => {
         where: { slug: 'not-found' }
       })
       expect(stubbedSendStatus).to.have.been.calledWith(404)
+    })
+
+    it('returns a 500 with an error message when the database call throws an error', async () => {
+      stubbedFindOne.thwos('ERROR!')
+      const req = { params: { slug: 'throws-error' } }
+      const res = { send: stubbedSend }
+
+      await slugger(req, res)
+
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'throw-error' } })
+      expect(stubbedStatus).to.have.been.calledWith(500)
+      expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
     })
   })
   describe('addNewVillain', () => {
