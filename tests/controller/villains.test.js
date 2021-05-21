@@ -17,16 +17,32 @@ describe('Controllers - villains', () => {
   let stubbedFindOne
   let stubbedFindAll
   let stubbedSend
-  let stubbedSendStatus
   let stubbedStatus
-  let stubbedStatusDotSend
+  let stubbedSendStatus
+  let stubbedStatusSend
+
 
   before(() => {
+    sandbox = sinon.createSandbox()
+
     stubbedFindOne = sinon.stub(models.villains, 'findOne')
     stubbedCreate = sinon.stub(models.villains, 'create')
     stubbedSend = sinon.stub()
     stubbedStatus = sinon.stub()
-    stubbedStatusDotSend = sinon.stub()
+    stubbedSendStatus = sinon.stub()
+    stubbedStatusSend = sandbox.stub()
+
+    res = {
+      send: stubbedSend,
+      sendStatus: stubbedSendStatus,
+      status: stubbedStatus
+    }
+  })
+  beforeEach(() => {
+    stubbedStatus.returns({ send: stubbedStatusSend })
+  })
+  afterEach(() => {
+    sandbox.reset()
   })
 
 
@@ -62,6 +78,18 @@ describe('Controllers - villains', () => {
         })
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
+
+    it('returns a 404 when no hero is found', async () => {
+      stubbedFindOne.returns(null)
+      const req = { params: { slug: 'not-found' } }
+
+      await slugger(req, res)
+
+      expect(stubbedFindOne).to.have.been.calledWith({
+        where: { slug: 'not-found' }
+      })
+      expect(stubbedSendStatus).to.have.been.calledWith(404)
+    })
   })
   describe('addNewVillain', () => {
     it('creates a new villain database item from the data provided and responds with a 200 status and the new item',
