@@ -126,7 +126,7 @@ describe('Controllers - villains', () => {
           body: {
             name: 'Shere Khan',
             movie: 'The Jungle Book',
-            slug: 'shere-khan',
+            slug: 'shere-khan'
           }
         }
 
@@ -159,7 +159,9 @@ describe('Controllers - villains', () => {
 
       await addNewVillain(req, res)
 
-      expect(stubbedCreate).to.have.been.calledwith({ name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', })
+      expect(stubbedCreate).to.have.been.calledWith({
+         name: 'Shere Khan', movie: 'The Jungle Book', 
+         slug: 'shere-khan', })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusSend).to.have.been.calledWith('not able to create villain, please try again')
     })
