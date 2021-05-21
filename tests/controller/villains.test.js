@@ -149,9 +149,9 @@ describe('Controllers - villains', () => {
 
       await addNewVillain(req, res)
 
-      expect(stubbedCreate).to.have.callCount(0)
+      expect(stubbedCreate).to.have.callCount(1)
       expect(stubbedStatus).to.have.been.calledWith(400)
-      expect(stubbedStatusSend).to.have.been.calledWith('you have not presented the fields required')
+      expect(stubbedStatusSend).to.have.been.calledWith('You have not presented the attributes required: name, movie, slug')
     })
     it('returns a 500 status and error message throws-error ', async () => {
       stubbedCreate.throws('ERROR!')
@@ -160,8 +160,10 @@ describe('Controllers - villains', () => {
       await addNewVillain(req, res)
 
       expect(stubbedCreate).to.have.been.calledWith({
-         name: 'Shere Khan', movie: 'The Jungle Book', 
-         slug: 'shere-khan', })
+        name: 'Shere Khan',
+        movie: 'The Jungle Book',
+        slug: 'shere-khan',
+      })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusSend).to.have.been.calledWith('not able to create villain, please try again')
     })
