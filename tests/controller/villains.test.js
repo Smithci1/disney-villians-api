@@ -51,15 +51,14 @@ describe('Controllers - villains', () => {
 
 
   describe('getVillains', () => {
-    it('retrieves a list of villains from the database and calls r with the list',
+    it('retrieves a list of villains from the database and calls with the list',
       async () => {
         stubbedFindAll.returns(mockVillains)
-        const stubbedSend = sinon.stub()
-        const res = { send: stubbedSend }
+
 
         await getVillains({}, res)
 
-        expect(stubbedFindAll).to.have.callCount(1)
+        expect(stubbedFindAll).to.have.been.calledWith({ attributes: ['name', 'movie', 'slug'] })
         expect(stubbedSend).to.have.been.calledWith(mockVillains)
       })
     it('returns a 500 status when an error occurs retrieving villains', async () => {
@@ -81,12 +80,12 @@ describe('Controllers - villains', () => {
         const stubbedSend = sinon.stub()
         const res = { send: stubbedSend }
 
-        const req = { params: { slug: 'Shere khan' } }
+        const req = { params: { slug: 'shere-khan' }, attributes: ['name', 'movie', 'slug'] }
 
         await slugger(req, res)
 
         expect(stubbedFindOne).to.have.been.calledWith({
-          where: { slug: 'Shere khan' },
+          where: { slug: 'shere-Khan' },
           attributes: ['name', 'movie', 'slug']
         })
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
@@ -113,7 +112,10 @@ describe('Controllers - villains', () => {
 
       await slugger(req, res)
 
-      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'throw-error' } })
+      expect(stubbedFindOne).to.have.been.calledWith({
+        where: { slug: 'throw-error' },
+        attributes: ['name', 'movie', 'slug']
+      })
       expect(stubbedStatus).to.have.been.calledWith(500)
       expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
     })
@@ -145,14 +147,24 @@ describe('Controllers - villains', () => {
         expect(stubbedSend).to.have.been.calledWith(singleMockvillain)
       })
     it('returns a 400 status when the required fiels arent given', async () => {
-      stubbedCreate.returns(null)
-      const req = { body: {} }
+      const req = { body: { name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', } }
 
       await addNewVillain(req, res)
 
       expect(stubbedCreate).to.have.callCount(0)
       expect(stubbedStatus).to.have.been.calledWith(400)
-      expect(stubbedStatusSend).to.have.been.calledWith(singleMockvillain)
+      expect(stubbedStatusSend).to.have.been.calledWith('you have not presented the fields required')
+    })
+    it('returns a 500 status and error message throws-error ', async () => {
+      stubbedCreate.throws('ERROR!')
+      const req = { body: { name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', } }
+
+      await addNewVillain(req, res)
+
+      expect(stubbedCreate).to.have.been.calledwith({ 
+        name: 'Shere Khan', movie: 'The Jungle Book', slug: 'shere-khan', })
+      expect(stubbedStatus).to.have.been.calledWith(500)
+      expect(stubbedStatusSend).to.have.been.calledWith('villain is unreachable, please try again')
     })
   })
 })
